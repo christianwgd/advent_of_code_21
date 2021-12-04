@@ -9,6 +9,7 @@ import sys
 class Board():
 
     def __init__(self, matrix):
+        self.bingo = False
         self.rows = matrix
 
     @property
@@ -85,7 +86,7 @@ def day4_1(filename):
         for board in bingo_boards:
             board.check_value(n)
             if board.check():
-                bingo = True
+                board.bingo = True
                 print('Bingo')
                 break
         if bingo:
@@ -98,11 +99,46 @@ def day4_1(filename):
 
 
 def day4_2(filename):
-    pass
+
+    with open(os.path.join(sys.path[0], filename), 'r') as file:
+        numbers = file.readline().rstrip("\n").split(',')
+        boards = []
+        board = None
+        for line in file.readlines():
+            if len(line) < 2:
+                if board:
+                    boards.append(board)
+                board = []
+            else:
+                row = line.rstrip("\n").split()
+                board.append(row)
+        boards.append(board)
+
+    bingo_boards = []
+    for board in boards:
+        bingo_boards.append(Board(board))
+    board_count = len(bingo_boards)
+
+    bingo = 0
+    for n in numbers:
+        for board in bingo_boards:
+            if not board.bingo:
+                board.check_value(n)
+                if board.check():
+                    board.bingo = True
+                    bingo += 1
+                    if bingo == board_count:
+                        break
+        if bingo == board_count:
+            break
+
+    print(n)
+    print(board.sum())
+    print(int(n) * board.sum())
 
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    day4_1('input.txt')
+    day4_2('input.txt')
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
