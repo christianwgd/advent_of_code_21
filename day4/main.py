@@ -123,6 +123,7 @@ def day4_2(filename):
     for n in numbers:
         for board in bingo_boards:
             if not board.bingo:
+                
                 board.check_value(n)
                 if board.check():
                     board.bingo = True
